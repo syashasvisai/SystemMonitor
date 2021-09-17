@@ -110,45 +110,13 @@ long LinuxParser::UpTime() {
  
 }
 
-
-// Read and return the number of idle jiffies for the system
-
-
-// TODO: Read and return utilization
+// Read and return utilization
 // changed the return type to float based on an answer in the forum https://knowledge.udacity.com/questions/141752
 // This function definition is implemented in process.cpp as there was a problem with operator overloading wrt to the return value. Hint taken from an answer in the forum.  https://knowledge.udacity.com/questions/96882
 
-/* float LinuxParser::CpuUtilization(int pid) {
-  long cpu_util, total_time, seconds ;
-  string line, utime, stime, cutime, cstime, value;
-  
-  std::ifstream filestream(kProcDirectory + to_string(pid) + kStatFilename);
-    if (filestream.is_open()) {
-      std::getline(filestream, line);
-      std::istringstream linestream(line);
-      for (int i = 0; i < 20; ++i){
-      linestream >> value;
-        if(i==14){
-          utime = value;
-        }if (i==15){
-          stime = value;
-        }if(i==16){
-          cutime = value;
-        }if(i==17){
-          cstime = value;
-        }
-      }
-      
-      total_time = std::stol(utime) + std::stol(stime) + std::stol(cstime) + std::stol(cutime);
-      seconds = LinuxParser::UpTime(pid);
-  
-      cpu_util = 100 * ((total_time / sysconf(_SC_CLK_TCK)) / seconds);
-      
-      return cpu_util;
-  }
-  return cpu_util;
-}
-*/
+// float LinuxParser::CpuUtilization(int pid) {}
+
+
 // Read and return the total number of processes
 int LinuxParser::TotalProcesses() {return LinuxParser::ParseStat(kStatFilename, filterProcesses);}
 
@@ -173,7 +141,6 @@ int LinuxParser::ParseStat(std::string file_name, std::string key){
   }
   return value;
 }
-
 
 // Read and return the command associated with a process
 string LinuxParser::Command(int pid) { 
@@ -225,31 +192,10 @@ long LinuxParser::UpTime(int pid) {
     if (filestream.is_open()) {
       std::getline(filestream, line);
       std::istringstream linestream(line);
-      for (int i = 0; i<=21; ++i){
+      for (int i = 0; i<22; ++i){
       linestream >> uptime;
       }
     }
-      uptime_process = LinuxParser::UpTime() - std::stol(uptime)/sysconf(_SC_CLK_TCK);
-      return uptime_process;
+  uptime_process = LinuxParser::UpTime() - std::stol(uptime)/sysconf(_SC_CLK_TCK);
+  return uptime_process;
 }
-
-
-// Implemented in processor.cpp as Utilization()
-
-/*float LinuxParser::ProcessorUtilization() {
-  string line;
-  string key;
-  float value;
-  std::ifstream filestream(kProcDirectory+kStatFilename); // streams from this file
-  if (filestream.is_open()) { // Checks if the file is open
-    while (std::getline(filestream, line)) { // Executes upto the last line
-      std::istringstream linestream(line); // reads a string until whitespace is reached (<sstream> lib)
-      while (linestream >> key >> value) { // extracts the keys and values. Here we need only the 1st and 2nd strings
-        if (key == filterCpu) {
-          return value; 
-         }
-      }
-    }
-  }
-  return value;
-}*/
